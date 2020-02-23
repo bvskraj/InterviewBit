@@ -1,0 +1,31 @@
+public class Solution {
+    public int uniquePaths(int A, int B) {
+        return uniqpaths(1, 1, A, B);
+    }
+    
+    public int uniqpaths(int a, int b, int A, int B)
+    {
+        if (a == A && b == B)
+        {
+            return 1;
+        }
+        int x, y;
+        if (a < A)
+        {
+            x = uniqpaths(a + 1, b, A, B);
+        }
+        else
+        {
+            x = 0;
+        }
+        if (b < B)
+        {
+            y = uniqpaths(a, b + 1, A, B);
+        }
+        else
+        {
+            y = 0;
+        }
+        return x + y;
+    }
+}

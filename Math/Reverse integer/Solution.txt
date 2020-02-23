@@ -1,0 +1,23 @@
+public class Solution {
+    public int reverse(int A) {
+        boolean m = false;
+        if (A < 0)
+        {
+            m = true;
+            A = A * -1;
+        }
+        long s, b;
+        b = A;
+        s = 0;
+        while (b > 0)
+        {
+            s = s * 10 + b % 10;
+            b /= 10;
+        }
+        if (s > Integer.MAX_VALUE || s < Integer.MIN_VALUE)
+        {
+            return 0;
+        }
+        return m ?  (int)-1 * s : (int)s;
+    }
+}
