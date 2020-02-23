@@ -1,0 +1,39 @@
+public class Solution {
+    public int[] plusOne(int[] A) {
+        int pos;
+        for(pos = A.length - 1; pos >=0; pos--)
+        {
+            if(A[pos] == 9)
+            {
+                A[pos] = 0;
+            }
+            else
+            {
+                A[pos]++;
+                return removezeros(A);
+            }
+        }
+        
+        int newarr[] = new int[A.length + 1];
+        newarr[0] = 1;
+        for(pos = 1; pos <= A.length; pos++)
+        {
+            newarr[pos] = 0;
+        }
+        return newarr;
+    }
+    
+    private int[] removezeros(int[] B)
+    {
+        if(B.length == 1)
+        {
+            return B;
+        }
+        int p = 0;
+        while(B[p] == 0)
+        {
+            p++;
+        }
+        return Arrays.copyOfRange(B, p, B.length);
+    }
+}

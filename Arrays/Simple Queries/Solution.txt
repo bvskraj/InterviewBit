@@ -1,0 +1,88 @@
+typedef long long ll;
+typedef pair <int, ll> ii;
+
+const int MOD = 1e9 + 7;
+
+bool comp(const ii &a, const ii &b)
+{
+    return a.first > b.first;
+}
+
+vector<int> Solution::solve(vector<int> &A, vector<int> &B)
+{
+    int n = A.size();
+    vector <int> pgi(n, -1), ngi(n, n);
+    
+    stack <int> s;
+    
+    /* Next Greater Index */
+    s.push(0);
+    for (int  i = 1; i < n; i++)
+    {
+        while (!s.empty() and A[s.top()] <= A[i])
+        {
+            ngi[s.top()] = i;
+            s.pop();
+        }
+        s.push(i);
+    }
+    while (!s.empty()) s.pop();
+    
+    /* Previous Greater Index */
+    s.push(n - 1);
+    for (int i = n - 2; i >= 0; i--)
+    {
+        while (!s.empty() and A[s.top()] < A[i])
+        {
+            pgi[s.top()] = i;
+            s.pop();
+        }
+        s.push(i);
+    }
+    while (!s.empty())  s.pop();
+    
+    /* Finding frequency for each element to be the max element */
+    vector <ii> arr(n);
+    
+    for (int i = 0; i < n; i++)
+    {
+        arr[i].first = A[i];
+        arr[i].second = (i - pgi[i]) * 1LL * (ngi[i] - i);
+    }
+    
+    /* Using sieve to find product of divisors */
+    int MAX = *max_element(A.begin(), A.end());
+    
+    ll *sieve = new ll[MAX + 1];
+    
+    for (int i = 1; i <= MAX; i++)
+        sieve[i] = 1;
+        
+    for (ll i = 2; i <= MAX; i++)
+        for (int j = i; j <= MAX; j += i)
+            sieve[j] = (sieve[j] * i) % MOD;
+    
+    /* Replacing elements with product of their divisors */
+    for (int i = 0; i < n; i++)
+        arr[i].first = sieve[arr[i].first];
+    
+    /* sort in descending order */
+    sort(arr.begin(), arr.end(), comp);
+    
+    /* Calculating cumulative frequency */
+    vector <ll> freq(n);
+    for (int i = 0; i < n; i++) freq[i] = arr[i].second;
+    for (int i = 1; i < n; i++) freq[i] += freq[i - 1];
+    
+    /* Returning answer using lower bound */
+    vector <int> res;
+    for (int i = 0; i < B.size(); i++)
+    {
+        auto it = lower_bound(freq.begin(), freq.end(), B[i]);
+        res.push_back(arr[it - freq.begin()].first);
+    }
+            
+    delete[] sieve;
+
+    return res;
+}
